@@ -353,6 +353,7 @@ function renderProgram() {
       const description = language === "kg" ? ceremony.text_kg : ceremony.text_ru;
       return `
         <article class="timeline__item">
+          <span class="timeline__flower" aria-hidden="true"></span>
           <time class="timeline__time">${escapeHtml(ceremony.time ?? "")}</time>
           <div class="timeline__content">
             <h3>${escapeHtml(title ?? "")}</h3>

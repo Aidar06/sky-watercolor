@@ -51,6 +51,8 @@ a {
 }
 
 .site-shell {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 760px);
   margin: 0 auto;
   overflow: hidden;
@@ -58,15 +60,29 @@ a {
   box-shadow: 0 0 80px rgba(49, 75, 96, 0.28);
 }
 
+.background-strip {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.background-strip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+}
+
 .texture-panel {
   position: relative;
+  z-index: 1;
   isolation: isolate;
   min-height: 100svh;
   overflow: hidden;
-  background-color: #f8fcff;
-  background-position: top center;
-  background-repeat: repeat-y;
-  background-size: 100% auto;
+  background: transparent;
 }
 
 .texture-panel::before {
@@ -77,12 +93,6 @@ a {
   background: rgba(255, 255, 255, 0.08);
   pointer-events: none;
 }
-
-.texture-panel--one { background-image: url("/assets/backgrounds/bg-01.webp"); }
-.texture-panel--two { background-image: url("/assets/backgrounds/bg-02.webp"); }
-.texture-panel--three { background-image: url("/assets/backgrounds/bg-03.webp"); }
-.texture-panel--four { background-image: url("/assets/backgrounds/bg-04.webp"); }
-.texture-panel--five { background-image: url("/assets/backgrounds/bg-05.webp"); }
 
 .section {
   position: relative;
@@ -341,21 +351,44 @@ a {
 }
 
 .calendar__day--wedding {
-  color: #fff;
+  z-index: 0;
+  color: var(--ink);
   font-weight: 600;
 }
 
 .calendar__day--wedding::before {
   position: absolute;
-  z-index: -1;
-  width: 38px;
-  height: 34px;
-  content: "♥";
-  color: var(--blue-deep);
-  font-family: Georgia, serif;
-  font-size: 2.2rem;
-  line-height: 1;
-  transform: translateY(-1px);
+  z-index: -2;
+  width: 54px;
+  height: 50px;
+  content: "";
+  background: url("/assets/decorations/04-heart.webp") center / contain no-repeat;
+  filter: drop-shadow(0 5px 8px rgba(72, 111, 141, 0.22));
+  animation: calendar-heartbeat 1.55s ease-in-out infinite;
+}
+
+.calendar__day--wedding::after {
+  position: absolute;
+  z-index: -3;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(87, 132, 165, 0.4);
+  border-radius: 50%;
+  content: "";
+  animation: heart-ripple 1.55s ease-out infinite;
+}
+
+@keyframes calendar-heartbeat {
+  0%, 34%, 100% { transform: scale(0.92) rotate(-2deg); }
+  12% { transform: scale(1.13) rotate(1deg); }
+  22% { transform: scale(0.98) rotate(-1deg); }
+  28% { transform: scale(1.08) rotate(1deg); }
+}
+
+@keyframes heart-ripple {
+  0%, 28% { opacity: 0; transform: scale(0.68); }
+  36% { opacity: 0.45; }
+  78%, 100% { opacity: 0; transform: scale(1.42); }
 }
 
 .section--countdown {
@@ -441,17 +474,48 @@ a {
   padding-bottom: 0;
 }
 
-.timeline__item::before {
+.timeline__flower {
   position: absolute;
-  top: 5px;
-  left: 80px;
-  width: 13px;
-  height: 13px;
-  border: 4px solid rgba(255, 255, 255, 0.85);
+  top: -6px;
+  left: 72px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--blue-deep);
+  font-size: 1.42rem;
+  line-height: 1;
+  box-shadow: 0 5px 14px rgba(57, 91, 117, 0.2);
+  animation: flower-spin 7s linear infinite;
+}
+
+.timeline__flower::before {
+  content: "❀";
+  transform: translateY(-1px);
+}
+
+.timeline__flower::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   content: "";
-  background: var(--blue-deep);
-  box-shadow: 0 2px 10px rgba(57, 91, 117, 0.28);
+  background: #fff;
+  box-shadow: 0 0 6px rgba(70, 113, 145, 0.8);
+  animation: flower-orbit 2.8s linear infinite;
+}
+
+@keyframes flower-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes flower-orbit {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(19px); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(19px); }
 }
 
 .timeline__time {
@@ -483,6 +547,7 @@ a {
 }
 
 .section--venue {
+  width: min(100% - 24px, 710px);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -491,9 +556,10 @@ a {
 
 .venue-card {
   position: relative;
-  max-width: 530px;
+  width: 100%;
+  max-width: 680px;
   margin: 36px auto 0;
-  padding: 48px 30px 34px;
+  padding: 58px 46px 42px;
 }
 
 .venue-card__type {
@@ -986,10 +1052,6 @@ a {
     border-radius: 22px;
   }
 
-  .venue-card {
-    padding: 40px 20px 28px;
-  }
-
   .venue-actions {
     flex-direction: column;
   }
@@ -1007,8 +1069,8 @@ a {
     gap: 28px;
   }
 
-  .timeline__item::before {
-    left: 64px;
+  .timeline__flower {
+    left: 56px;
   }
 
   .timeline__time {
@@ -1017,6 +1079,14 @@ a {
 
   .guest-sheet {
     padding-inline: 18px;
+  }
+
+  .section--venue {
+    width: min(100% - 18px, 710px);
+  }
+
+  .venue-card {
+    padding: 46px 22px 32px;
   }
 }
 
