@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#e8f2fb" />
+    <meta
+      name="description"
+      content="Персональное свадебное приглашение на русском и кыргызском языках"
+    />
+    <title>Свадебное приглашение</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600&family=Marck+Script&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preload" href="/assets/backgrounds/bg-01.webp" as="image" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="language-switch" role="group" aria-label="Выбор языка">
+      <button type="button" data-language="ru" aria-pressed="true">RU</button>
+      <span aria-hidden="true"></span>
+      <button type="button" data-language="kg" aria-pressed="false">KG</button>
+    </div>
+
+    <div id="loadingState" class="state-screen">
+      <img src="/assets/decorations/04-heart.webp" alt="" />
+      <p data-i18n="loading">Готовим ваше приглашение…</p>
+    </div>
+
+    <div id="errorState" class="state-screen state-screen--error" hidden>
+      <img src="/assets/decorations/06-envelope.webp" alt="" />
+      <h1 data-i18n="errorTitle">Не удалось открыть приглашение</h1>
+      <p id="errorMessage"></p>
+      <button id="retryButton" class="button button--primary" type="button" data-i18n="retry">
+        Попробовать снова
+      </button>
+    </div>
+
+    <main id="invitation" class="site-shell" hidden>
+      <section class="texture-panel texture-panel--one hero" aria-labelledby="heroNames">
+        <img
+          class="ornament ornament--hero-corner"
+          src="/assets/decorations/01-floral-corner.webp"
+          alt=""
+        />
+        <img
+          class="ornament ornament--hero-snow"
+          src="/assets/decorations/02-snowflake.webp"
+          alt=""
+        />
+        <div class="hero__content reveal">
+          <p class="eyebrow" data-i18n="invitationLabel">Приглашение на свадьбу</p>
+          <h1 id="heroNames" class="hero__names">
+            <span id="groomName"></span>
+            <span class="hero__ampersand">&amp;</span>
+            <span id="brideName"></span>
+          </h1>
+          <p id="heroDate" class="hero__date"></p>
+          <div class="fine-line" aria-hidden="true"><span>♥</span></div>
+        </div>
+        <a class="scroll-cue" href="#welcome" aria-label="Прокрутить ниже">
+          <span></span>
+        </a>
+      </section>
+
+      <section class="texture-panel texture-panel--two" id="welcome">
+        <div class="section section--welcome reveal">
+          <img
+            class="ornament ornament--welcome"
+            src="/assets/decorations/08-botanical-sprig.webp"
+            alt=""
+          />
+          <p class="script-title" data-i18n="dearGuests">Дорогие родные и близкие!</p>
+          <p class="welcome-copy" data-i18n="welcomeText">
+            С большой радостью приглашаем вас разделить с нами один из самых важных и
+            счастливых дней нашей жизни — день нашей свадьбы.
+          </p>
+          <p class="signature" id="coupleSignature"></p>
+        </div>
+
+        <div class="section section--date reveal" aria-labelledby="dateTitle">
+          <p class="section-kicker" data-i18n="saveTheDate">Сохраните дату</p>
+          <h2 id="dateTitle" class="script-title" data-i18n="ourDay">Наш особенный день</h2>
+          <div class="date-summary">
+            <p id="weddingWeekday" class="date-summary__weekday"></p>
+            <p id="weddingLongDate" class="date-summary__date"></p>
+            <p id="weddingTime" class="date-summary__time"></p>
+          </div>
+          <div class="calendar-card" id="calendar"></div>
+        </div>
+      </section>
+
+      <section class="texture-panel texture-panel--three">
+        <div class="section section--countdown reveal" aria-labelledby="countdownTitle">
+          <img
+            class="ornament ornament--rings"
+            src="/assets/decorations/03-wedding-rings.webp"
+            alt=""
+          />
+          <p class="section-kicker" data-i18n="untilWedding">До нашей свадьбы</p>
+          <h2 id="countdownTitle" class="script-title" data-i18n="countingMoments">
+            Считаем счастливые мгновения
+          </h2>
+          <div class="countdown" id="countdown" aria-live="polite">
+            <div><strong data-count="days">00</strong><span data-unit="days"></span></div>
+            <div><strong data-count="hours">00</strong><span data-unit="hours"></span></div>
+            <div><strong data-count="minutes">00</strong><span data-unit="minutes"></span></div>
+            <div><strong data-count="seconds">00</strong><span data-unit="seconds"></span></div>
+          </div>
+        </div>
+
+        <div class="section section--program reveal" aria-labelledby="programTitle">
+          <p class="section-kicker" data-i18n="dayPlan">Всё самое важное</p>
+          <h2 id="programTitle" class="script-title" data-i18n="programTitle">Программа дня</h2>
+          <div id="programList" class="timeline"></div>
+        </div>
+      </section>
+
+      <section class="texture-panel texture-panel--four">
+        <div class="section section--venue reveal" aria-labelledby="venueTitle">
+          <img
+            class="ornament ornament--glasses"
+            src="/assets/decorations/07-champagne-glasses.webp"
+            alt=""
+          />
+          <p class="section-kicker" data-i18n="weWaitForYou">Ждём вас</p>
+          <h2 id="venueTitle" class="script-title" data-i18n="venueTitle">Место проведения</h2>
+          <div class="venue-card">
+            <p id="venueType" class="venue-card__type"></p>
+            <h3 id="venueName"></h3>
+            <p id="venueAddress"></p>
+            <div class="venue-actions">
+              <a id="googleMapsLink" class="button button--primary" target="_blank" rel="noreferrer">
+                Google Maps
+              </a>
+              <a id="twoGisLink" class="button button--soft" target="_blank" rel="noreferrer">
+                2ГИС
+              </a>
+            </div>
+          </div>
+          <img
+            class="ornament ornament--venue-flower"
+            src="/assets/decorations/09-wedding-cake.webp"
+            alt=""
+          />
+        </div>
+      </section>
+
+      <section class="texture-panel texture-panel--five">
+        <div class="section section--rsvp reveal" aria-labelledby="rsvpTitle">
+          <img
+            class="ornament ornament--envelope"
+            src="/assets/decorations/06-envelope.webp"
+            alt=""
+          />
+          <p class="section-kicker" data-i18n="replyKicker">Ваш ответ поможет нам</p>
+          <h2 id="rsvpTitle" class="script-title" data-i18n="rsvpTitle">Анкета гостя</h2>
+          <p class="section-copy" data-i18n="rsvpText">
+            Пожалуйста, подтвердите своё присутствие. Это поможет нам всё подготовить с
+            заботой о каждом госте.
+          </p>
+
+          <form id="rsvpForm" class="rsvp-form">
+            <label>
+              <span data-i18n="guestName">Ваше имя</span>
+              <input id="guestName" name="name" type="text" autocomplete="name" required />
+            </label>
+
+            <fieldset>
+              <legend data-i18n="attendanceQuestion">Вы сможете присутствовать?</legend>
+              <label class="choice">
+                <input type="radio" name="attendance" value="yes" checked />
+                <span data-i18n="attendingYes">Да, с радостью приду</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="attendance" value="no" />
+                <span data-i18n="attendingNo">К сожалению, не смогу</span>
+              </label>
+            </fieldset>
+
+            <label>
+              <span data-i18n="guestCount">Количество гостей</span>
+              <input id="guestCount" name="guests_count" type="number" min="1" max="30" value="1" required />
+            </label>
+
+            <label>
+              <span data-i18n="wishLabel">Пожелание молодожёнам</span>
+              <textarea id="guestWish" name="wish" rows="4"></textarea>
+            </label>
+
+            <button id="submitButton" class="button button--primary button--wide" type="submit">
+              <span data-i18n="sendReply">Отправить ответ</span>
+            </button>
+            <p id="formStatus" class="form-status" role="status"></p>
+          </form>
+
+          <button id="openGuestsButton" class="guest-list-button" type="button">
+            <span data-i18n="guestList">Список гостей</span>
+            <span id="guestBadge" class="guest-badge">0</span>
+          </button>
+        </div>
+
+        <footer class="footer reveal">
+          <img src="/assets/decorations/10-doves.webp" alt="" />
+          <p class="script-title" data-i18n="withLove">С любовью ждём вас!</p>
+          <p id="footerNames" class="footer__names"></p>
+        </footer>
+      </section>
+    </main>
+
+    <dialog id="guestSheet" class="guest-sheet">
+      <div class="guest-sheet__handle" aria-hidden="true"></div>
+      <div class="guest-sheet__header">
+        <div>
+          <p class="section-kicker" data-i18n="ourGuests">Наши гости</p>
+          <h2 class="script-title" data-i18n="guestList">Список гостей</h2>
+        </div>
+        <button id="closeGuestsButton" class="icon-button" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <div id="guestListContent" class="guest-list"></div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
