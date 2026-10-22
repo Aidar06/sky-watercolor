@@ -290,6 +290,10 @@ function startIntro() {
   elements.introStage.classList.remove("show-hint");
   elements.introStage.classList.add("is-playing");
   elements.introStage.setAttribute("aria-busy", "true");
+  if (!elements.introVideo.getAttribute("src")) {
+    elements.introVideo.src = elements.introVideo.dataset.src;
+    elements.introVideo.load();
+  }
   elements.introVideo.currentTime = 0;
   elements.introVideo.play().catch(() => finishIntroPlayback());
   introFallbackTimer = window.setTimeout(finishIntroPlayback, 6500);

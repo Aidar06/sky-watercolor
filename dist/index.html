@@ -29,9 +29,11 @@
       <video
         id="introVideo"
         class="intro-stage__video"
-        src="/assets/video/watercolor-reveal.mp4"
-        poster="/assets/backgrounds/bg-clean.png"
-        preload="auto"
+        data-src="/assets/video/watercolor-reveal.mp4"
+        poster="/assets/backgrounds/bg-clean.webp"
+        preload="none"
+        width="941"
+        height="1672"
         muted
         playsinline
       ></video>
@@ -45,12 +47,12 @@
     </div>
 
     <div id="loadingState" class="state-screen">
-      <img src="/assets/decorations/04-heart.webp" alt="" />
+      <img src="/assets/decorations/04-heart.webp" width="640" height="569" alt="" decoding="async" />
       <p data-i18n="loading">Готовим ваше приглашение…</p>
     </div>
 
     <div id="errorState" class="state-screen state-screen--error" hidden>
-      <img src="/assets/decorations/06-envelope.webp" alt="" />
+      <img src="/assets/decorations/06-envelope.webp" width="640" height="571" alt="" decoding="async" />
       <h1 data-i18n="errorTitle">Не удалось открыть приглашение</h1>
       <p id="errorMessage"></p>
       <button id="retryButton" class="button button--primary" type="button" data-i18n="retry">
@@ -60,32 +62,38 @@
 
     <main id="invitation" class="site-shell" hidden>
       <div class="background-strip" aria-hidden="true">
-        <img src="/assets/backgrounds/bg-01.webp" alt="" />
-        <img src="/assets/backgrounds/bg-02.webp" alt="" />
-        <img src="/assets/backgrounds/bg-03.webp" alt="" />
-        <img src="/assets/backgrounds/bg-04.webp" alt="" />
-        <img src="/assets/backgrounds/bg-05.webp" alt="" />
-        <img src="/assets/backgrounds/bg-01.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-02.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-03.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-04.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-05.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-01.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-02.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-03.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-04.webp" alt="" loading="lazy" />
-        <img src="/assets/backgrounds/bg-05.webp" alt="" loading="lazy" />
+        <img src="/assets/backgrounds/bg-01.webp" width="941" height="1672" alt="" decoding="async" fetchpriority="high" />
+        <img src="/assets/backgrounds/bg-02.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-03.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-04.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-05.webp" width="941" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-01.webp" width="941" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-02.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-03.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-04.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-05.webp" width="941" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-01.webp" width="941" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-02.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-03.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-04.webp" width="940" height="1672" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/backgrounds/bg-05.webp" width="941" height="1672" alt="" loading="lazy" decoding="async" />
       </div>
       <section class="texture-panel texture-panel--one hero" aria-labelledby="heroNames">
         <img
           class="ornament ornament--hero-corner"
           src="/assets/decorations/01-floral-corner.webp"
+          width="640"
+          height="618"
           alt=""
+          decoding="async"
         />
         <img
           class="ornament ornament--hero-snow"
           src="/assets/decorations/02-snowflake.webp"
+          width="640"
+          height="604"
           alt=""
+          decoding="async"
         />
         <div class="hero__content reveal">
           <p class="eyebrow" data-i18n="invitationLabel">Приглашение на свадьбу</p>
@@ -107,7 +115,11 @@
           <img
             class="ornament ornament--welcome"
             src="/assets/decorations/08-botanical-sprig.webp"
+            width="582"
+            height="640"
             alt=""
+            loading="lazy"
+            decoding="async"
           />
           <p class="script-title" data-i18n="dearGuests">Дорогие родные и близкие!</p>
           <p class="welcome-copy" data-i18n="welcomeText">
@@ -134,7 +146,11 @@
           <img
             class="ornament ornament--rings"
             src="/assets/decorations/03-wedding-rings.webp"
+            width="640"
+            height="438"
             alt=""
+            loading="lazy"
+            decoding="async"
           />
           <p class="section-kicker" data-i18n="untilWedding">До нашей свадьбы</p>
           <h2 id="countdownTitle" class="script-title" data-i18n="countingMoments">
@@ -160,7 +176,11 @@
           <img
             class="ornament ornament--glasses"
             src="/assets/decorations/07-champagne-glasses.webp"
+            width="567"
+            height="640"
             alt=""
+            loading="lazy"
+            decoding="async"
           />
           <p class="section-kicker" data-i18n="weWaitForYou">Ждём вас</p>
           <h2 id="venueTitle" class="script-title" data-i18n="venueTitle">Место проведения</h2>
@@ -180,7 +200,11 @@
           <img
             class="ornament ornament--venue-flower"
             src="/assets/decorations/09-wedding-cake.webp"
+            width="594"
+            height="640"
             alt=""
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </section>
@@ -190,7 +214,11 @@
           <img
             class="ornament ornament--envelope"
             src="/assets/decorations/06-envelope.webp"
+            width="640"
+            height="571"
             alt=""
+            loading="lazy"
+            decoding="async"
           />
           <p class="section-kicker" data-i18n="replyKicker">Ваш ответ поможет нам</p>
           <h2 id="rsvpTitle" class="script-title" data-i18n="rsvpTitle">Анкета гостя</h2>
@@ -240,7 +268,7 @@
         </div>
 
         <footer class="footer reveal">
-          <img src="/assets/decorations/10-doves.webp" alt="" />
+          <img src="/assets/decorations/10-doves.webp" width="640" height="576" alt="" loading="lazy" decoding="async" />
           <p class="script-title" data-i18n="withLove">С любовью ждём вас!</p>
           <p id="footerNames" class="footer__names"></p>
         </footer>
