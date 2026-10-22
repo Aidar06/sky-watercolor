@@ -120,8 +120,14 @@ let invitation = null;
 let weddingDate = null;
 let countdownTimer = null;
 let toastTimer = null;
+let introStarted = false;
+let introVideoFinished = false;
+let invitationReady = false;
+let introFallbackTimer = null;
 
 const elements = {
+  introStage: document.querySelector("#introStage"),
+  introVideo: document.querySelector("#introVideo"),
   loading: document.querySelector("#loadingState"),
   error: document.querySelector("#errorState"),
   errorMessage: document.querySelector("#errorMessage"),
@@ -222,6 +228,8 @@ async function loadInvitation() {
     renderInvitation();
     elements.loading.hidden = true;
     elements.invitation.hidden = false;
+    invitationReady = true;
+    completeIntroIfReady();
     requestAnimationFrame(observeReveals);
   } catch (error) {
     console.error(error);
@@ -230,6 +238,10 @@ async function loadInvitation() {
 }
 
 function showError(message) {
+  window.clearTimeout(introFallbackTimer);
+  elements.introStage.hidden = true;
+  document.body.classList.remove("intro-pending");
+  document.body.classList.add("intro-complete");
   elements.loading.hidden = true;
   elements.invitation.hidden = true;
   elements.error.hidden = false;
@@ -245,7 +257,38 @@ function applyLanguage() {
     button.setAttribute("aria-pressed", String(button.dataset.language === language));
   });
   elements.closeGuests.setAttribute("aria-label", text("close"));
+  elements.introStage.setAttribute(
+    "aria-label",
+    language === "kg" ? "Чакырууну ачуу" : "Открыть приглашение",
+  );
   if (invitation && weddingDate) renderInvitation();
+}
+
+function finishIntroPlayback() {
+  if (introVideoFinished) return;
+  introVideoFinished = true;
+  window.clearTimeout(introFallbackTimer);
+  completeIntroIfReady();
+}
+
+function completeIntroIfReady() {
+  if (!introVideoFinished || !invitationReady) return;
+  elements.introStage.classList.add("is-complete");
+  document.body.classList.remove("intro-pending");
+  document.body.classList.add("intro-complete");
+  window.setTimeout(() => {
+    elements.introStage.hidden = true;
+  }, 1100);
+}
+
+function startIntro() {
+  if (introStarted) return;
+  introStarted = true;
+  elements.introStage.classList.add("is-playing");
+  elements.introStage.setAttribute("aria-busy", "true");
+  elements.introVideo.currentTime = 0;
+  elements.introVideo.play().catch(() => finishIntroPlayback());
+  introFallbackTimer = window.setTimeout(finishIntroPlayback, 6500);
 }
 
 function renderInvitation() {
@@ -503,6 +546,10 @@ document.querySelectorAll("[data-language]").forEach((button) => {
     applyLanguage();
   });
 });
+
+elements.introStage.addEventListener("click", startIntro);
+elements.introVideo.addEventListener("ended", finishIntroPlayback);
+elements.introVideo.addEventListener("error", finishIntroPlayback);
 
 elements.retry.addEventListener("click", loadInvitation);
 elements.form.addEventListener("submit", submitRsvp);

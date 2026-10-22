@@ -19,7 +19,24 @@
     <link rel="stylesheet" href="/styles.css" />
     <script src="/app.js" defer></script>
   </head>
-  <body>
+  <body class="intro-pending">
+    <button
+      id="introStage"
+      class="intro-stage"
+      type="button"
+      aria-label="Открыть приглашение"
+    >
+      <video
+        id="introVideo"
+        class="intro-stage__video"
+        src="/assets/video/watercolor-reveal.mp4"
+        poster="/assets/backgrounds/bg-clean.png"
+        preload="auto"
+        muted
+        playsinline
+      ></video>
+    </button>
+
     <div class="language-switch" role="group" aria-label="Выбор языка">
       <button type="button" data-language="ru" aria-pressed="true">RU</button>
       <span aria-hidden="true"></span>
