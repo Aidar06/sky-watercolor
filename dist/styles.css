@@ -625,12 +625,9 @@ a {
   place-items: center;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.86);
   color: var(--blue-deep);
   font-size: 1.42rem;
   line-height: 1;
-  box-shadow: 0 5px 14px rgba(57, 91, 117, 0.2);
   animation: flower-spin 7s linear infinite;
 }
 
@@ -639,26 +636,8 @@ a {
   transform: translateY(-1px);
 }
 
-.timeline__flower::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  content: "";
-  background: #fff;
-  box-shadow: 0 0 6px rgba(70, 113, 145, 0.8);
-  animation: flower-orbit 2.8s linear infinite;
-}
-
 @keyframes flower-spin {
   to { transform: rotate(360deg); }
-}
-
-@keyframes flower-orbit {
-  from { transform: translate(-50%, -50%) rotate(0deg) translateX(19px); }
-  to { transform: translate(-50%, -50%) rotate(360deg) translateX(19px); }
 }
 
 .timeline__time {
