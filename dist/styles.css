@@ -919,6 +919,9 @@ a {
 
 .footer img {
   width: min(72vw, 390px);
+  height: auto;
+  display: block;
+  margin-inline: auto;
   opacity: 0.78;
 }
 
