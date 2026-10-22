@@ -124,6 +124,7 @@ let introStarted = false;
 let introVideoFinished = false;
 let invitationReady = false;
 let introFallbackTimer = null;
+let introHintTimer = null;
 
 const elements = {
   introStage: document.querySelector("#introStage"),
@@ -239,6 +240,7 @@ async function loadInvitation() {
 
 function showError(message) {
   window.clearTimeout(introFallbackTimer);
+  window.clearTimeout(introHintTimer);
   elements.introStage.hidden = true;
   document.body.classList.remove("intro-pending");
   document.body.classList.add("intro-complete");
@@ -284,6 +286,8 @@ function completeIntroIfReady() {
 function startIntro() {
   if (introStarted) return;
   introStarted = true;
+  window.clearTimeout(introHintTimer);
+  elements.introStage.classList.remove("show-hint");
   elements.introStage.classList.add("is-playing");
   elements.introStage.setAttribute("aria-busy", "true");
   elements.introVideo.currentTime = 0;
@@ -550,6 +554,10 @@ document.querySelectorAll("[data-language]").forEach((button) => {
 elements.introStage.addEventListener("click", startIntro);
 elements.introVideo.addEventListener("ended", finishIntroPlayback);
 elements.introVideo.addEventListener("error", finishIntroPlayback);
+
+introHintTimer = window.setTimeout(() => {
+  if (!introStarted) elements.introStage.classList.add("show-hint");
+}, 4000);
 
 elements.retry.addEventListener("click", loadInvitation);
 elements.form.addEventListener("submit", submitRsvp);

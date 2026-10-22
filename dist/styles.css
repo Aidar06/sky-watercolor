@@ -66,6 +66,55 @@ body.intro-pending {
   transition: opacity 220ms ease;
 }
 
+.intro-stage__hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 74px;
+  height: 74px;
+  border: 1px solid rgba(77, 118, 149, 0.34);
+  border-radius: 50%;
+  background: rgba(114, 155, 185, 0.055);
+  box-shadow: 0 8px 30px rgba(77, 118, 149, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.82);
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.intro-stage__hint::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(77, 118, 149, 0.48);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.intro-stage__hint::after {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(77, 118, 149, 0.3);
+  border-radius: 50%;
+  content: "";
+  animation: intro-tap-ripple 1.8s ease-out infinite;
+}
+
+.intro-stage.show-hint .intro-stage__hint {
+  opacity: 0.6;
+  transform: translate(-50%, -50%) scale(1);
+  animation: intro-tap-breathe 2.2s ease-in-out infinite;
+}
+
+.intro-stage.is-playing .intro-stage__hint,
+.intro-stage.is-complete .intro-stage__hint {
+  opacity: 0;
+  animation: none;
+}
+
 .intro-stage.is-playing {
   cursor: default;
 }
@@ -117,6 +166,16 @@ body.intro-pending {
 @keyframes intro-copy {
   from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes intro-tap-breathe {
+  0%, 100% { box-shadow: 0 8px 30px rgba(77, 118, 149, 0.08); }
+  50% { box-shadow: 0 10px 42px rgba(77, 118, 149, 0.2); }
+}
+
+@keyframes intro-tap-ripple {
+  0% { opacity: 0.65; transform: scale(0.72); }
+  75%, 100% { opacity: 0; transform: scale(1.55); }
 }
 
 button,
