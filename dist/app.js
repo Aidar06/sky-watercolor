@@ -26,6 +26,7 @@ const text = (key) => copy[language]?.[key] ?? copy.ru[key] ?? key;
 const escapeHtml = (value) => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 const invitationId = () => location.pathname.split("/").filter(Boolean)[0] || new URLSearchParams(location.search).get("id") || "1";
 const localized = (value) => value?.[language] || value?.ru || Object.values(value || {})[0] || {};
+const validMapUrl = (value) => { try { const url = new URL(String(value || "")); return ["http:", "https:"].includes(url.protocol) ? url.href : ""; } catch { return ""; } };
 
 async function requestInvitation(id) {
   const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}`, { headers: { Accept: "application/json" }, cache: "no-store" });
@@ -94,9 +95,9 @@ function renderProgram() {
 function renderVenue() {
   const venue = localized(invitation?.venue?.content), map = invitation?.venue?.map || {}, query = [venue.name, venue.address].filter(Boolean).join(", ");
   elements.venueType.textContent = venue.type || ""; elements.venueName.textContent = venue.name || ""; elements.venueAddress.textContent = venue.address || "";
-  const google = map.google_url || (map.enabled ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}` : "");
-  const gis = map.two_gis_url || (map.enabled ? `https://2gis.kg/search/${encodeURIComponent(query)}` : "");
-  elements.googleMaps.hidden = !map.enabled || !google; elements.twoGis.hidden = !map.enabled || !gis;
+  const google = validMapUrl(map.google_url) || (query ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}` : "");
+  const gis = validMapUrl(map.two_gis_url) || (query ? `https://2gis.kg/search/${encodeURIComponent(query)}` : "");
+  elements.googleMaps.hidden = !google; elements.twoGis.hidden = !gis;
   if (google) elements.googleMaps.href = google; if (gis) elements.twoGis.href = gis;
 }
 
