@@ -19,7 +19,7 @@ let language = localStorage.getItem("wedding-language") || "ru";
 let invitation, weddingDate, countdownTimer, toastTimer;
 const $ = (selector) => document.querySelector(selector);
 const elements = {
-  loading: $("#loadingState"), error: $("#errorState"), errorMessage: $("#errorMessage"), invitation: $("#invitation"), retry: $("#retryButton"), groom: $("#groomName"), bride: $("#brideName"), heroDate: $("#heroDate"), signature: $("#coupleSignature"), weekday: $("#weddingWeekday"), longDate: $("#weddingLongDate"), time: $("#weddingTime"), calendar: $("#calendar"), program: $("#programList"), venueType: $("#venueType"), venueName: $("#venueName"), venueAddress: $("#venueAddress"), googleMaps: $("#googleMapsLink"), twoGis: $("#twoGisLink"), form: $("#rsvpForm"), rsvpSection: $(".section--rsvp"), guestCount: $("#guestCount"), guestWish: $("#guestWish"), submit: $("#submitButton"), formStatus: $("#formStatus"), footerNames: $("#footerNames"), invitationTitle: $("#invitationTitle"), invitationText: $("#invitationText"), wishBlock: $("#wishBlock"), wishTitle: $("#wishTitle"), wishText: $("#wishText"), musicToggle: $("#musicToggle"), music: $("#backgroundMusic"), toast: $("#toast"),
+  loading: $("#loadingState"), error: $("#errorState"), errorMessage: $("#errorMessage"), invitation: $("#invitation"), retry: $("#retryButton"), groom: $("#groomName"), bride: $("#brideName"), heroDate: $("#heroDate"), signature: $("#coupleSignature"), weekday: $("#weddingWeekday"), longDate: $("#weddingLongDate"), time: $("#weddingTime"), calendar: $("#calendar"), program: $("#programList"), venueType: $("#venueType"), venueName: $("#venueName"), venueAddress: $("#venueAddress"), googleMaps: $("#googleMapsLink"), twoGis: $("#twoGisLink"), form: $("#rsvpForm"), rsvpSection: $(".section--rsvp"), guestCount: $("#guestCount"), guestWish: $("#guestWish"), submit: $("#submitButton"), formStatus: $("#formStatus"), footerNames: $("#footerNames"), invitationTitle: $("#invitationTitle"), invitationText: $("#invitationText"), wishBlock: $("#wishBlock"), wishTitle: $("#wishTitle"), wishText: $("#wishText"), toast: $("#toast"),
 };
 
 const text = (key) => copy[language]?.[key] ?? copy.ru[key] ?? key;
@@ -40,7 +40,7 @@ function configureLanguages() {
   const enabled = invitation?.languages?.enabled?.filter((code) => copy[code]) || ["ru"];
   if (!enabled.includes(language)) language = enabled.includes(invitation?.languages?.default) ? invitation.languages.default : enabled[0];
   document.querySelectorAll("[data-language]").forEach((button) => { button.hidden = !enabled.includes(button.dataset.language); });
-  $(".language-switch").hidden = enabled.length < 2;
+  $(".language-menu").hidden = enabled.length < 2;
   localStorage.setItem("wedding-language", language);
 }
 
@@ -48,6 +48,7 @@ function applyLanguage() {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = text(node.dataset.i18n); });
   document.querySelectorAll("[data-language]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.language === language)));
+  $(".language-menu__current").textContent = language === "ky" ? "KG" : language === "kk" ? "KZ" : "RU";
   if (invitation) renderInvitation();
 }
 
@@ -57,7 +58,7 @@ function renderInvitation() {
   elements.signature.textContent = elements.footerNames.textContent = [groom, bride].filter(Boolean).join(" & ");
   elements.invitationTitle.textContent = intro.title || ""; elements.invitationText.textContent = intro.text || "";
   document.title = groom && bride ? `${groom} & ${bride}` : text("invitationLabel");
-  renderDate(); renderCalendar(); renderCountdown(); renderProgram(); renderVenue(); renderWish(); configureRsvp(); configureMusic();
+  renderDate(); renderCalendar(); renderCountdown(); renderProgram(); renderVenue(); renderWish(); configureRsvp();
 }
 
 function renderDate() {
@@ -110,13 +111,6 @@ function configureRsvp() {
   elements.guestCount.max = String(Math.max(1, Number(config.max_guests) || 10));
 }
 
-function configureMusic() {
-  const music = invitation.music || {};
-  elements.musicToggle.hidden = !music.enabled || !music.url;
-  if (music.url && elements.music.src !== music.url) elements.music.src = music.url;
-  elements.music.volume = Math.min(1, Math.max(0, Number(music.volume ?? 0.6)));
-}
-
 function syncGuestCount() {
   const attending = elements.form.elements.attendance.value === "yes";
   elements.guestCount.disabled = !attending; elements.guestCount.required = attending; elements.guestCount.min = attending ? "1" : "0"; elements.guestCount.value = attending ? Math.max(1, Number(elements.guestCount.value) || 1) : 0;
@@ -149,8 +143,10 @@ async function loadInvitation() {
   } catch (error) { console.error(error); elements.loading.hidden = true; elements.error.hidden = false; elements.errorMessage.textContent = text("loadError"); }
 }
 
-document.querySelectorAll("[data-language]").forEach((button) => button.addEventListener("click", () => { language = button.dataset.language; localStorage.setItem("wedding-language", language); applyLanguage(); }));
+const languageMenu=$(".language-menu"),languageMenuToggle=$(".language-menu__toggle");
+languageMenuToggle.addEventListener("click",()=>{const open=languageMenu.classList.toggle("is-open");languageMenuToggle.setAttribute("aria-expanded",String(open))});
+document.addEventListener("click",event=>{if(!languageMenu.contains(event.target)){languageMenu.classList.remove("is-open");languageMenuToggle.setAttribute("aria-expanded","false")}});
+document.querySelectorAll("[data-language]").forEach((button) => button.addEventListener("click", () => { language = button.dataset.language; localStorage.setItem("wedding-language", language); applyLanguage(); languageMenu.classList.remove("is-open"); languageMenuToggle.setAttribute("aria-expanded","false"); }));
 elements.retry.addEventListener("click", loadInvitation); elements.form.addEventListener("submit", submitRsvp);
 elements.form.querySelectorAll('[name="attendance"]').forEach((radio) => radio.addEventListener("change", syncGuestCount));
-elements.musicToggle.addEventListener("click", async () => { if (elements.music.paused) { try { await elements.music.play(); elements.musicToggle.classList.add("is-playing"); } catch {} } else { elements.music.pause(); elements.musicToggle.classList.remove("is-playing"); } });
 syncGuestCount(); loadInvitation();

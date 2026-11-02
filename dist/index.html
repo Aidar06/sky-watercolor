@@ -20,12 +20,13 @@
     <script src="/app.js" defer></script>
   </head>
   <body class="intro-complete">
-    <div class="language-switch" role="group" aria-label="Выбор языка">
-      <button type="button" data-language="ru" aria-pressed="true">RU</button>
-      <span aria-hidden="true"></span>
-      <button type="button" data-language="ky" aria-pressed="false">KG</button>
-      <span aria-hidden="true"></span>
-      <button type="button" data-language="kk" aria-pressed="false">KZ</button>
+    <div class="language-menu" aria-label="Выбор языка">
+      <button class="language-menu__toggle" type="button" aria-expanded="false" aria-label="Выбрать язык"><span class="language-menu__current">RU</span></button>
+      <div class="language-menu__panel" role="group">
+        <button type="button" data-language="ru" aria-pressed="true">RU</button>
+        <button type="button" data-language="ky" aria-pressed="false">KG</button>
+        <button type="button" data-language="kk" aria-pressed="false">KZ</button>
+      </div>
     </div>
 
     <div id="loadingState" class="state-screen">
@@ -260,8 +261,6 @@
       </section>
     </main>
 
-    <button id="musicToggle" class="music-toggle" type="button" aria-label="Музыка" hidden>♪</button>
-    <audio id="backgroundMusic" loop preload="none"></audio>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </body>
 </html>
