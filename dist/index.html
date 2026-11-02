@@ -19,31 +19,13 @@
     <link rel="stylesheet" href="/styles.css" />
     <script src="/app.js" defer></script>
   </head>
-  <body class="intro-pending">
-    <button
-      id="introStage"
-      class="intro-stage"
-      type="button"
-      aria-label="Открыть приглашение"
-    >
-      <video
-        id="introVideo"
-        class="intro-stage__video"
-        data-src="/assets/video/watercolor-reveal.mp4"
-        poster="/assets/backgrounds/bg-clean.webp"
-        preload="none"
-        width="941"
-        height="1672"
-        muted
-        playsinline
-      ></video>
-      <span class="intro-stage__hint" aria-hidden="true"></span>
-    </button>
-
+  <body class="intro-complete">
     <div class="language-switch" role="group" aria-label="Выбор языка">
       <button type="button" data-language="ru" aria-pressed="true">RU</button>
       <span aria-hidden="true"></span>
-      <button type="button" data-language="kg" aria-pressed="false">KG</button>
+      <button type="button" data-language="ky" aria-pressed="false">KG</button>
+      <span aria-hidden="true"></span>
+      <button type="button" data-language="kk" aria-pressed="false">KZ</button>
     </div>
 
     <div id="loadingState" class="state-screen">
@@ -121,8 +103,8 @@
             loading="lazy"
             decoding="async"
           />
-          <p class="script-title" data-i18n="dearGuests">Дорогие родные и близкие!</p>
-          <p class="welcome-copy" data-i18n="welcomeText">
+          <p id="invitationTitle" class="script-title">Дорогие родные и близкие!</p>
+          <p id="invitationText" class="welcome-copy">
             С большой радостью приглашаем вас разделить с нами один из самых важных и
             счастливых дней нашей жизни — день нашей свадьбы.
           </p>
@@ -138,6 +120,13 @@
             <p id="weddingTime" class="date-summary__time"></p>
           </div>
           <div class="calendar-card" id="calendar"></div>
+        </div>
+      </section>
+
+      <section id="wishBlock" class="texture-panel texture-panel--two" hidden>
+        <div class="section reveal">
+          <p id="wishTitle" class="script-title"></p>
+          <p id="wishText" class="welcome-copy"></p>
         </div>
       </section>
 
@@ -261,10 +250,6 @@
             <p id="formStatus" class="form-status" role="status"></p>
           </form>
 
-          <button id="openGuestsButton" class="guest-list-button" type="button">
-            <span data-i18n="guestList">Список гостей</span>
-            <span id="guestBadge" class="guest-badge">0</span>
-          </button>
         </div>
 
         <footer class="footer reveal">
@@ -275,18 +260,8 @@
       </section>
     </main>
 
-    <dialog id="guestSheet" class="guest-sheet">
-      <div class="guest-sheet__handle" aria-hidden="true"></div>
-      <div class="guest-sheet__header">
-        <div>
-          <p class="section-kicker" data-i18n="ourGuests">Наши гости</p>
-          <h2 class="script-title" data-i18n="guestList">Список гостей</h2>
-        </div>
-        <button id="closeGuestsButton" class="icon-button" type="button" aria-label="Закрыть">×</button>
-      </div>
-      <div id="guestListContent" class="guest-list"></div>
-    </dialog>
-
+    <button id="musicToggle" class="music-toggle" type="button" aria-label="Музыка" hidden>♪</button>
+    <audio id="backgroundMusic" loop preload="none"></audio>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </body>
 </html>

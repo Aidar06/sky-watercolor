@@ -947,6 +947,30 @@ a {
   backdrop-filter: blur(12px);
 }
 
+.music-toggle {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4rem);
+  z-index: 30;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(79, 113, 145, 0.28);
+  border-radius: 50%;
+  background: rgba(247, 252, 255, 0.9);
+  color: #557792;
+  box-shadow: 0 0.6rem 1.6rem rgba(64, 91, 116, 0.18);
+  font-size: 1.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.music-toggle.is-playing {
+  animation: music-pulse 2s ease-in-out infinite;
+}
+
+@keyframes music-pulse {
+  50% { transform: scale(1.08); }
+}
+
 .language-switch span {
   width: 1px;
   height: 18px;
