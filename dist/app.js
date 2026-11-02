@@ -24,8 +24,11 @@ const elements = {
 
 const text = (key) => copy[language]?.[key] ?? copy.ru[key] ?? key;
 const escapeHtml = (value) => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-const invitationId = () => location.pathname.split("/").filter(Boolean)[0] || new URLSearchParams(location.search).get("id") || "1";
-const localized = (value) => value?.[language] || value?.ru || Object.values(value || {})[0] || {};
+const invitationId = () => location.pathname.split("/").filter(Boolean)[0] || "1";
+const localized = (value) => {
+  const fallbackLanguage = invitation?.languages?.default;
+  return value?.[language] || value?.[fallbackLanguage] || value?.ru || {};
+};
 const validMapUrl = (value) => { try { const url = new URL(String(value || "")); return ["http:", "https:"].includes(url.protocol) ? url.href : ""; } catch { return ""; } };
 
 async function requestInvitation(id) {
@@ -38,8 +41,11 @@ async function requestInvitation(id) {
 }
 
 function configureLanguages() {
-  const enabled = invitation?.languages?.enabled?.filter((code) => copy[code]) || ["ru"];
-  if (!enabled.includes(language)) language = enabled.includes(invitation?.languages?.default) ? invitation.languages.default : enabled[0];
+  const configured = Array.isArray(invitation?.languages?.enabled) ? invitation.languages.enabled : [];
+  const enabled = [...new Set(configured.filter((code) => copy[code]))];
+  if (!enabled.length) enabled.push("ru");
+  const defaultLanguage = enabled.includes(invitation?.languages?.default) ? invitation.languages.default : enabled[0];
+  if (!enabled.includes(language)) language = defaultLanguage;
   document.querySelectorAll("[data-language]").forEach((button) => { button.hidden = !enabled.includes(button.dataset.language); });
   $(".language-menu").hidden = enabled.length < 2;
   localStorage.setItem("wedding-language", language);
@@ -49,7 +55,7 @@ function applyLanguage() {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = text(node.dataset.i18n); });
   document.querySelectorAll("[data-language]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.language === language)));
-  $(".language-menu__current").textContent = language === "ky" ? "KG" : language === "kk" ? "KZ" : "RU";
+  $(".language-menu__current").textContent = language.toUpperCase();
   if (invitation) renderInvitation();
 }
 
@@ -109,7 +115,9 @@ function renderWish() {
 function configureRsvp() {
   const config = invitation.rsvp || {};
   elements.rsvpSection.hidden = config.enabled === false; elements.guestWish.closest("label").hidden = config.allow_guest_wish === false;
-  elements.guestCount.max = String(Math.max(1, Number(config.max_guests) || 10));
+  const maxGuests = Math.max(1, Number(config.max_guests) || 10);
+  elements.guestCount.max = String(maxGuests);
+  elements.guestCount.value = String(Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1)));
 }
 
 function syncGuestCount() {
@@ -120,11 +128,13 @@ function syncGuestCount() {
 async function submitRsvp(event) {
   event.preventDefault(); if (!elements.form.reportValidity()) return;
   const id = invitationId(), attending = elements.form.elements.attendance.value === "yes";
-  const guest = { name: elements.form.elements.name.value.trim(), wish: invitation.rsvp?.allow_guest_wish === false ? "" : elements.form.elements.wish.value.trim(), guests_count: attending ? Math.max(1, Number(elements.guestCount.value) || 1) : 0, is_attending: attending };
+  const maxGuests = Math.max(1, Number(invitation.rsvp?.max_guests) || 10);
+  const guest = { name: elements.form.elements.name.value.trim(), wish: invitation.rsvp?.allow_guest_wish === false ? "" : elements.form.elements.wish.value.trim(), guests_count: attending ? Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1)) : 0, is_attending: attending };
   elements.submit.disabled = true; elements.formStatus.textContent = text("sending"); elements.formStatus.classList.remove("is-error");
   try {
     const latest = await requestInvitation(id);
-    const updated = { id: Number(latest.id ?? id), languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
+    if (!Array.isArray(latest.guests)) console.warn("Backend response has no guests array; previous RSVP answers cannot be preserved unless GET returns guests.");
+    const updated = { id: latest.id, languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
     const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}/full`, { method: "PATCH", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(updated) });
     if (!response.ok) throw new Error(`PATCH ${response.status}`);
     invitation = updated; elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
