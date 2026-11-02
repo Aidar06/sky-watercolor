@@ -124,7 +124,7 @@ async function submitRsvp(event) {
   elements.submit.disabled = true; elements.formStatus.textContent = text("sending"); elements.formStatus.classList.remove("is-error");
   try {
     const latest = await requestInvitation(id);
-    const updated = { ...latest, id: Number(latest.id ?? id), guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
+    const updated = { id: Number(latest.id ?? id), languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
     const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}/full`, { method: "PATCH", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(updated) });
     if (!response.ok) throw new Error(`PATCH ${response.status}`);
     invitation = updated; elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
