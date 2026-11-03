@@ -116,13 +116,15 @@ function configureRsvp() {
   const config = invitation.rsvp || {};
   elements.rsvpSection.hidden = config.enabled === false; elements.guestWish.closest("label").hidden = config.allow_guest_wish === false;
   const maxGuests = Math.max(1, Number(config.max_guests) || 10);
-  elements.guestCount.max = String(maxGuests);
-  elements.guestCount.value = String(Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1)));
+  const selectedGuests = Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1));
+  elements.guestCount.innerHTML = Array.from({ length: maxGuests }, (_, index) => `<option value="${index + 1}">${index + 1}</option>`).join("");
+  elements.guestCount.value = String(selectedGuests);
 }
 
 function syncGuestCount() {
   const attending = elements.form.elements.attendance.value === "yes";
-  elements.guestCount.disabled = !attending; elements.guestCount.required = attending; elements.guestCount.min = attending ? "1" : "0"; elements.guestCount.value = attending ? Math.max(1, Number(elements.guestCount.value) || 1) : 0;
+  elements.guestCount.disabled = !attending; elements.guestCount.required = attending;
+  if (attending && !elements.guestCount.value) elements.guestCount.value = "1";
 }
 
 async function submitRsvp(event) {

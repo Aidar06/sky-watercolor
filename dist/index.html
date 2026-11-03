@@ -17,7 +17,7 @@
     />
     <link rel="preload" href="/assets/backgrounds/bg-01.webp" as="image" />
     <link rel="stylesheet" href="/styles.css" />
-    <script src="/app.js?v=4" defer></script>
+    <script src="/app.js?v=5" defer></script>
   </head>
   <body class="intro-complete">
     <div class="language-menu" aria-label="Выбор языка">
@@ -237,7 +237,9 @@
 
             <label>
               <span data-i18n="guestCount">Количество гостей</span>
-              <input id="guestCount" name="guests_count" type="number" min="1" max="30" value="1" required />
+              <select id="guestCount" name="guests_count" required>
+                <option value="1">1</option>
+              </select>
             </label>
 
             <label>

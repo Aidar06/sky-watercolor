@@ -703,7 +703,7 @@ a {
 }
 
 .rsvp-form input[type="text"],
-.rsvp-form input[type="number"],
+.rsvp-form select,
 .rsvp-form textarea {
   width: 100%;
   border: 1px solid rgba(77, 118, 149, 0.26);
@@ -717,9 +717,13 @@ a {
 }
 
 .rsvp-form input[type="text"],
-.rsvp-form input[type="number"] {
+.rsvp-form select {
   height: 50px;
   padding: 0 15px;
+}
+
+.rsvp-form select {
+  cursor: pointer;
 }
 
 .rsvp-form textarea {
@@ -729,6 +733,7 @@ a {
 }
 
 .rsvp-form input:focus,
+.rsvp-form select:focus,
 .rsvp-form textarea:focus {
   border-color: var(--blue-deep);
   box-shadow: 0 0 0 4px rgba(84, 128, 160, 0.1);
