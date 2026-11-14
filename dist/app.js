@@ -94,7 +94,8 @@ function renderCountdown() {
 }
 
 function renderProgram() {
-  const ceremonies = [...(invitation.ceremonies || [])].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  const ceremonyItems = Array.isArray(invitation.ceremonies) ? invitation.ceremonies : invitation.ceremonies && typeof invitation.ceremonies === "object" ? Object.values(invitation.ceremonies) : [];
+  const ceremonies = [...ceremonyItems].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
   elements.program.innerHTML = ceremonies.length ? ceremonies.map((item) => { const value = localized(item.content); return `<article class="timeline__item"><span class="timeline__flower" aria-hidden="true"></span><time class="timeline__time">${escapeHtml(item.time)}</time><div class="timeline__content"><h3>${escapeHtml(value.title)}</h3>${value.text ? `<p>${escapeHtml(value.text)}</p>` : ""}</div></article>`; }).join("") : `<p class="empty-copy">${text("noCeremonies")}</p>`;
 }
 
