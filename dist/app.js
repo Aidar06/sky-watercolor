@@ -131,15 +131,12 @@ async function submitRsvp(event) {
   event.preventDefault(); if (!elements.form.reportValidity()) return;
   const id = invitationId(), attending = elements.form.elements.attendance.value === "yes";
   const maxGuests = Math.max(1, Number(invitation.rsvp?.max_guests) || 10);
-  const guest = { name: elements.form.elements.name.value.trim(), wish: invitation.rsvp?.allow_guest_wish === false ? "" : elements.form.elements.wish.value.trim(), guests_count: attending ? Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1)) : 0, is_attending: attending };
+  const guest = { name: elements.form.elements.name.value.trim(), count: attending ? Math.min(maxGuests, Math.max(1, Number(elements.guestCount.value) || 1)) : 1, attendance: attending, wish: invitation.rsvp?.allow_guest_wish === false ? "" : elements.form.elements.wish.value.trim() };
   elements.submit.disabled = true; elements.formStatus.textContent = text("sending"); elements.formStatus.classList.remove("is-error");
   try {
-    const latest = await requestInvitation(id);
-    if (!Array.isArray(latest.guests)) console.warn("Backend response has no guests array; previous RSVP answers cannot be preserved unless GET returns guests.");
-    const updated = { languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
-    const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}/full`, { method: "PATCH", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(updated) });
-    if (!response.ok) throw new Error(`PATCH ${response.status}`);
-    invitation = { ...latest, ...updated, public_id: id }; elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
+    const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}/rsvp`, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(guest) });
+    if (!response.ok) throw new Error(`RSVP ${response.status}`);
+    elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
   } catch (error) { console.error(error); elements.formStatus.classList.add("is-error"); elements.formStatus.textContent = text("saveError"); showToast(text("saveError")); }
   finally { elements.submit.disabled = false; }
 }
