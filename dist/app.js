@@ -136,10 +136,10 @@ async function submitRsvp(event) {
   try {
     const latest = await requestInvitation(id);
     if (!Array.isArray(latest.guests)) console.warn("Backend response has no guests array; previous RSVP answers cannot be preserved unless GET returns guests.");
-    const updated = { id: latest.id, languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
+    const updated = { languages: latest.languages, names: latest.names, date: latest.date, invitation: latest.invitation, wish_block: latest.wish_block, ceremonies: latest.ceremonies, venue: latest.venue, rsvp: latest.rsvp, guests: [...(Array.isArray(latest.guests) ? latest.guests : []), guest] };
     const response = await fetch(`${API_BASE}/${encodeURIComponent(id)}/full`, { method: "PATCH", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(updated) });
     if (!response.ok) throw new Error(`PATCH ${response.status}`);
-    invitation = updated; elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
+    invitation = { ...latest, ...updated, public_id: id }; elements.form.reset(); elements.form.elements.attendance.value = "yes"; syncGuestCount(); elements.formStatus.textContent = text("saveSuccess"); showToast(text("saveSuccess"));
   } catch (error) { console.error(error); elements.formStatus.classList.add("is-error"); elements.formStatus.textContent = text("saveError"); showToast(text("saveError")); }
   finally { elements.submit.disabled = false; }
 }
